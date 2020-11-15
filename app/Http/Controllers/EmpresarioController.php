@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Empresario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class EmpresarioController extends Controller
 {
@@ -14,18 +16,21 @@ class EmpresarioController extends Controller
      */
     public function index()
     {
-        $empresarios = Empresario::latest()->paginate(5);
-        return view('index', ['empresarios' => $empresarios]);
-    }
+        $empresarios = Empresario::where('activo', 1)->latest()->paginate(50);
+        // $response = Http::get(
+        //     'https://fx.currencysystem.com/webservices/CurrencyServer5.asmx/AllCurrencies',
+        //     [
+        //         'licenseKey' => ''
+        //     ]
+        // );
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('crear-empresario');
+        // $p = xml_parser_create();
+        // xml_parse_into_struct($p, $response->body(), $vals, $index);
+        // xml_parser_free($p);
+
+        // $currency = explode(';',$vals[0]['value']);
+
+        return view('index', ['empresarios' => $empresarios,]);
     }
 
     /**
@@ -34,27 +39,39 @@ class EmpresarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'codigo' => 'required',
-            'razon_social' => 'required',
-            'razon_social' => 'required',
-            'nombre' => 'required',
-            'pais' => 'required',
-            'tipo_moneda' => 'required',
-            'estado' => 'required',
-            'ciudad' => 'required',
-            'telefono' => 'required',
-            'email' => 'required',
-            'activo' => 'required',
-        ]);
-
-        $empresario = Empresario::create($request->all());
-
-        if( !is_null($empresario) )
-            return back()->with('success', 'Nuevo empresario añadido');
-        else return back()->with('failed', 'Alerta, empresario no añadido');
+    public function create(Request $request){
+        // $request->validate([
+        //     'codigo_empleado' => 'required | unique| regex:/[a-zA-Z áéíóúÁÉÍÓÚñÑ]/',
+        //     'nombre' => 'required',
+        //     'razon_social' => 'required',
+        //     'apellido_paterno' => 'required',
+        //     'apellidomaterno' => 'required',
+        //     'puesto' => 'required',
+        //     'sueldo' => 'required',
+        //     'tipo_moneda_sueldo' => 'required',
+        //     'correo' => 'required',
+        //     'activo' => 'required',
+        //     'eliminado' => 'required',
+        // ]);
+        //
+        $empleado = new Empresario();
+        $empleado->codigo = $request->codigo;
+        $empleado->razon_social =  $request->razon_social;
+        $empleado->nombre = $request->nombre;
+        $empleado->pais = $request->pais;
+        $empleado->tipo_moneda = $request->tipo_moneda;
+        $empleado->estado = $request->estado;
+        $empleado->ciudad = $request->ciudad;
+        $empleado->telefono = $request->telefono;
+        $empleado->email = $request->email;
+        $empleado->activo = 1;
+        $result = $empleado->save();
+        $data = [
+            'state' => $result,
+            'id' => 0,
+        ];
+        if($result) $data['id'] = $empleado->id;
+        return $data;
     }
 
     /**
@@ -63,20 +80,23 @@ class EmpresarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Empresario $empresario)
+    public function show(Request $request)
     {
-        return view('ver-empresario', compact('empresario'));
-    }
+        $u = Empresario::find($request->id);
+        $data = [];
+        $data["id"] = $u->id;
+        $data["codigo"] = $u->codigo;
+        $data["razon_social"] = $u->razon_social;
+        $data["nombre"] = $u->nombre;
+        $data["pais"] = $u->pais;
+        $data["tipo_moneda"] = $u->tipo_moneda;
+        $data["estado"] = $u->estado;
+        $data["ciudad"] = $u->ciudad;
+        $data["telefono"] = $u->telefono;
+        $data["email"] = $u->email;
+        $data["activo"] = $u->activo;
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Empresario $empresario)
-    {
-        return view('editar-empresario', compact('empresario'));
+        return $data;
     }
 
     /**
@@ -86,27 +106,22 @@ class EmpresarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Empresario $empresario)
+    public function update(Request $request, Empresario $empresarios)
     {
-        $request->validate([
-            'codigo' => 'required',
-            'razon_social' => 'required',
-            'razon_social' => 'required',
-            'nombre' => 'required',
-            'pais' => 'required',
-            'tipo_moneda' => 'required',
-            'estado' => 'required',
-            'ciudad' => 'required',
-            'telefono' => 'required',
-            'email' => 'required',
-            'activo' => 'required',
-        ]);
+        $empresarios = Empresario::find($request->id);
+        $empresarios->codigo = $request->codigo;
+        $empresarios->razon_social = $request->razon_social;
+        $empresarios->nombre = $request->nombre;
+        $empresarios->pais = $request->pais;
+        $empresarios->tipo_moneda = $request->tipo_moneda;
+        $empresarios->estado = $request->estado;
+        $empresarios->ciudad = $request->ciudad;
+        $empresarios->telefono = $request->telefono;
+        $empresarios->email = $request->email;
+        $empresarios->activo = $request->activo;
+        $result = $empresarios->save();
 
-        $empresario = Empresario::update($request->all());
-
-        if( !is_null($empresario) )
-            return back()->with('success', 'Actualizacion exitosa');
-        else return back()->with('failed', 'Alerta, fallo la actualizacion de los datos');
+        return ['result' => $result];
     }
 
     /**
@@ -115,12 +130,30 @@ class EmpresarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Empresario $empresario)
+    public function delete(request $request)
     {
-        $empresario = $empresario->delete();
+        $empleado = Empresario::find($request->id);
+        $empleado->eliminado = 1;
 
-        if( is_null($empresario) )
-            return back()->with("success", "Se elimino con exito");
-        else return back()->with("failed", "Empresario no eliminado, vuelva a intentarlo");
+        return ['result' => $empleado->save()];
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function tooglestate(request $request)
+    {
+        $empresario = Empresario::find($request->id);
+        $empresario->activo = (int) !$empresario->activo;
+        $result = $empresario->save();
+
+        return [
+            'result' => $result,
+            'id' => $request->id,
+            'activo' => $empleado->activo
+        ];
     }
 }

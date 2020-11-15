@@ -23,4 +23,18 @@ use App\Http\Controllers\EmpresarioController;
 //     return view('empresarios');
 // })->name('dashboard');
 
-Route::resource('empresarios', EmpresarioController::class);
+Route::middleware(['auth:sanctum', 'verified'])->get('/', function(){
+    return redirect()->route('dashboard');
+})->name('index');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [EmpresarioController::class, 'index'])->name('dashboard');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/{id}', [EmpresarioController::class, 'show']);
+
+Route::middleware(['auth:sanctum', 'verified'])->post('/create', [EmpresarioController::class, 'create'])->name('create');
+
+Route::middleware(['auth:sanctum', 'verified'])->post('/update/{id}', [EmpresarioController::class, 'update'])->name('update');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/delete/{id}', [EmpresarioController::class, 'delete'])->name('delete');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/tooglestate/{id}', [EmpresarioController::class, 'tooglestate'])->name('tooglestate');
