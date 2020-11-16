@@ -5,10 +5,10 @@ agregarform.bind("submit", createtrigger);
 //Agregar nuevo usuario
 var btnNewUser = document.querySelector('#addUser')
 btnNewUser.addEventListener('click', () => {
+    agregarform[0].reset()
     agregarform.fadeIn()
     updateForm.fadeOut()
     show.fadeOut()
-
 })
 
 
@@ -28,26 +28,24 @@ function createtrigger(e) {
         },
         success: function (data) {
 
-            let html = `<tr>
+            let html = `
                             <td class="border px-4 py-2">${data.id}) ${$("#nombre").val()}</td>
                             <td class="border px-4 py-2">${$("#email").val()}</td>
                             <td class="border px-4 py-2">
-                                <button class="btn-show" data-id="${data.id}">Ver</button> -
-                                <button class="btnUpdate" data-id="${data.id}">Editar</button> -
-
-                                <button class="btnDelete" data-id="${data.id}">Eliminar</button>
+                                <button class="btn btn-outline-secondary btn-show" data-id="${data.id}">Ver</button> -
+                                <button class="btn btn-outline-info btnUpdate" data-id="${data.id}">Editar</button> -
+                                <button class="btn btn-outline-warning btnDelete" data-id="${data.id}">Eliminar</button>
                             </td>
-                        </tr>`
-
+                        `
             let el = document.createElement('tr');
+            el.id = '__'+data.id
             el.innerHTML = html;
             $('#mostrar tbody').prepend(el);
 
             $('#__' + data.id + ' .btnUpdate').bind('click', updatePrepare)
             $('#__' + data.id + ' .btn-show').bind('click', showtrigger)
             $('#__' + data.id + ' .btnDelete').bind('click', deleteTrigger)
-
-
+            agregarform.fadeOut()
         },
         error: function (data) {
             alert("Problemas al tratar de enviar el formulario");
@@ -119,7 +117,7 @@ const show = $('#show')
 //Actualiazar los elementos
 const updateForm = $('#actualizar')
 const btnupdateForm = $('#btneditar')
-
+updateForm.bind('submit', updateTrigger)
 
 function updateById(id, call) {
     $.ajax({ type: 'get', url: 'edit/' + id, success: call })
@@ -128,7 +126,7 @@ function updatePrepare() {
     updateForm[0].reset()
     getById($(this).attr('data-id'), (data) => {
         $('#u_codigo').attr('value', data.codigo)
-        $('#u_razon_social').html(data.razon_social)
+        $('#u_razon_social').text(data.razon_social)
         $('#u_nombre').attr('value', data.nombre)
         $('#u_pais').attr('value', data.pais)
         $('#u_tipo_moneda').attr('value', data.tipo_moneda)
@@ -166,9 +164,9 @@ function updateTrigger(e) {
             let html = `
                                 <td class="border px-4 py-2">
                                     ${dataid})
-                                    ${$("#nombre").val()}
+                                    ${$("#u_nombre").val()}
                                 </td>
-                                <td class="border px-4 py-2">${$("#email").val()}</td>
+                                <td class="border px-4 py-2">${$("#u_email").val()}</td>
                                 <td class="border px-4 py-2">
                                     <button class="btn btn-outline-secondary btn-show" data-id="${dataid}">Ver</button> -
                                     <button class="btn btn-outline-info btnUpdate" data-id="${dataid}">Editar</button> -
@@ -179,7 +177,7 @@ function updateTrigger(e) {
             $('#__' + dataid + ' .btnUpdate').bind('click', updatePrepare)
             $('#__' + dataid + ' .btn-show').bind('click', showtrigger)
             $('#__' + dataid + ' .btnDelete').bind('click', deleteTrigger)
-
+            updateForm.fadeOut()
         },
         error: function (data) {
             alert("Problemas al tratar de enviar el formulario");

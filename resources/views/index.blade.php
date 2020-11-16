@@ -119,6 +119,7 @@
 
             {{-- Formulario de editar --}}
             <form style="display:none;" method="post" action="edit" id="actualizar">
+
                 <h1>Actualizar datos de empleado</h1>
                 @csrf
                 <div class="form-group">
@@ -129,7 +130,7 @@
                 </div>
                 <div class="form-group">
                     <label for="u_razon_social">Razon Social</label>
-                    <textarea class="form-control" name="u_razon_social" id="razon_social" rows="3"></textarea>
+                    <textarea class="form-control" name="razon_social" id="u_razon_social" rows="3"></textarea>
                 </div>
                 <div class="form-group">
                     <label class="" for="u_nombre">
