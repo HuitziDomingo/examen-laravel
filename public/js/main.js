@@ -2,10 +2,14 @@ var agregarform = $("#agregar");
 var btnEnviar = $("#btncrear");
 agregarform.bind("submit", createtrigger);
 
-// $(document).ready(function () {
+//Agregar nuevo usuario
+var btnNewUser = document.querySelector('#addUser')
+btnNewUser.addEventListener('click', () => {
+    agregarform.fadeIn()
+    updateForm.fadeOut()
+    show.fadeOut()
 
-// });
-
+})
 
 
 function createtrigger(e) {
@@ -63,17 +67,39 @@ function showtrigger(e) {
     e.preventDefault()
     getById($(this).attr('data-id'), (data) => {
         let table =
-            `<div><h4>Nombre</h4>${data.nombre}</div>
-            <div><h4>Pais</h4>${data.pais}</div>
-            <div><h4>Moneda</h4>${data.tipo_moneda}</div>
-            <div><h4>Estado</h4>${data.estado} </div>
-            <div><h4>Ciudad</h4>${data.ciudad}</div>
-            <div><h4>Coreeo</h4>${data.email}</div>`
+            `
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Pais</th>
+                        <th scope="col">Moneda</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Ciudad</th>
+                        <th scope="col">Correo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-active">
+                        <th scope="row">${data.id}</th>
+                        <td scope="row">${data.nombre}</td>
+                        <td>${data.pais}</td>
+                        <td>${data.tipo_moneda}</td>
+                        <td>${data.estado}</td>
+                        <td>${data.ciudad}</td>
+                        <td>${data.email}</td>
+                    </tr>
+                </tbody>
+            </table>
+            `
         $('#showdiv').html(table)
     })
+    agregarform.fadeOut()
+    updateForm.fadeOut()
+    show.fadeIn()
 }
 function getById(id, call) {
-    console.log('funcionando......')
     $.ajax({ type: 'get', url: id, success: call });
 }
 
@@ -88,46 +114,52 @@ function deleteTrigger() {
     })
 }
 
+const show = $('#show')
+
 //Actualiazar los elementos
+const updateForm = $('#actualizar')
+const btnupdateForm = $('#btneditar')
+
+
 function updateById(id, call) {
-    $.ajax({ type: 'get', url: 'update/' + id, success: call })
+    $.ajax({ type: 'get', url: 'edit/' + id, success: call })
 }
 function updatePrepare() {
-    agregarform[0].reset()
+    updateForm[0].reset()
     getById($(this).attr('data-id'), (data) => {
-
-        $('#codigo').attr('value', data.codigo)
-        $('#razon_social').html(data.razon_social)
-        $('#nombre').attr('value', data.nombre)
-        $('#pais').attr('value', data.pais)
-        $('#tipo_moneda').attr('value', data.tipo_moneda)
-        $('#estado').attr('value', data.estado)
-        $('#ciudad').attr('value', data.ciudad)
-        $('#telefono').attr('value', data.telefono)
-        $('#email').attr('value', data.email)
+        $('#u_codigo').attr('value', data.codigo)
+        $('#u_razon_social').html(data.razon_social)
+        $('#u_nombre').attr('value', data.nombre)
+        $('#u_pais').attr('value', data.pais)
+        $('#u_tipo_moneda').attr('value', data.tipo_moneda)
+        $('#u_estado').attr('value', data.estado)
+        $('#u_ciudad').attr('value', data.ciudad)
+        $('#u_telefono').attr('value', data.telefono)
+        $('#u_email').attr('value', data.email)
 
         let input = `<input type="hidden" value=${data.id} class="hidden-id"/>`
         let cont = document.createElement('div')
         cont.innerHTML = input
-        agregarform.prepend(cont)
+        updateForm.prepend(cont)
     })
-    agregarform.unbind('submit', createtrigger);
-    agregarform.bind('submit', updateTrigger);
+    updateForm.fadeIn()
+    agregarform.fadeOut()
+    show.fadeOut()
 }
 
 function updateTrigger(e) {
     e.preventDefault();
     $.ajax({
         type: $(this).attr("method"),
-        url: 'update/' + $('.hidden-id').val(),
+        url: 'edit/' + $('.hidden-id').val(),
         data: $(this).serialize(),
         beforeSend: function () {
-            btnEnviar.html("Enviando");
-            btnEnviar.attr("disabled", "disabled");
+            btnupdateForm.html("Enviando");
+            btnupdateForm.attr("disabled", "disabled");
         },
         complete: function (data) {
-            btnEnviar.html("Enviar formulario");
-            btnEnviar.removeAttr("disabled");
+            btnupdateForm.html("Enviar formulario");
+            btnupdateForm.removeAttr("disabled");
         },
         success: function (data) {
             let dataid = $(".hidden-id").val()
@@ -159,10 +191,18 @@ function updateTrigger(e) {
 }
 
 
-
+//Validacion de las monedas
 var currency = document.querySelector('#btnCurrency')
 currency.addEventListener('click',() => {
-    let currencies = $('#tipo_moneda').val()
+    let currenciesVal = $('#tipo_moneda')
 
+    if (currencies.includes(currenciesVal.val().toUpperCase())){
+        currenciesVal.removeClass('is-invalid')
+        currenciesVal.addClass('is-valid')
+    }else{
+        currenciesVal.removeClass('is-valid')
+        currenciesVal.addClass('is-invalid')
+    }
 })
+
 

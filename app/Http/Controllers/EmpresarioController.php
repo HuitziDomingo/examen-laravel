@@ -14,7 +14,7 @@ class EmpresarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function dashboard()
     {
         $empresarios = Empresario::where('activo', 1)->latest()->paginate(50);
         $response = Http::get(
@@ -108,7 +108,7 @@ class EmpresarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Empresario $empresarios)
+    public function edit(Request $request, Empresario $empresarios)
     {
         $empresarios = Empresario::find($request->id);
         $empresarios->codigo = $request->codigo;

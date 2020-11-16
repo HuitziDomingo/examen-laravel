@@ -27,13 +27,13 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/', function(){
     return redirect()->route('dashboard');
 })->name('index');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [EmpresarioController::class, 'index'])->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [EmpresarioController::class, 'dashboard'])->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/{id}', [EmpresarioController::class, 'show']);
 
 Route::middleware(['auth:sanctum', 'verified'])->post('/create', [EmpresarioController::class, 'create'])->name('create');
 
-Route::middleware(['auth:sanctum', 'verified'])->post('/update/{id}', [EmpresarioController::class, 'update'])->name('update');
+Route::middleware(['auth:sanctum', 'verified'])->post('/edit/{id}', [EmpresarioController::class, 'edit'])->name('edit');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/delete/{id}', [EmpresarioController::class, 'delete'])->name('delete');
 
