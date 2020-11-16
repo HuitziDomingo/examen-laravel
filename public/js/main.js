@@ -32,8 +32,8 @@ function createtrigger(e) {
                             <td class="border px-4 py-2">${data.id}) ${$("#nombre").val()}</td>
                             <td class="border px-4 py-2">${$("#email").val()}</td>
                             <td class="border px-4 py-2">
-                                <button class="btn btn-outline-secondary btn-show" data-id="${data.id}">Ver</button> -
-                                <button class="btn btn-outline-info btnUpdate" data-id="${data.id}">Editar</button> -
+                                <button class="btn btn-outline-secondary btn-show" data-id="${data.id}">Ver</button>
+                                <button class="btn btn-outline-info btnUpdate" data-id="${data.id}">Editar</button>
                                 <button class="btn btn-outline-warning btnDelete" data-id="${data.id}">Eliminar</button>
                             </td>
                         `
@@ -168,8 +168,8 @@ function updateTrigger(e) {
                                 </td>
                                 <td class="border px-4 py-2">${$("#u_email").val()}</td>
                                 <td class="border px-4 py-2">
-                                    <button class="btn btn-outline-secondary btn-show" data-id="${dataid}">Ver</button> -
-                                    <button class="btn btn-outline-info btnUpdate" data-id="${dataid}">Editar</button> -
+                                    <button class="btn btn-outline-secondary btn-show" data-id="${dataid}">Ver</button>
+                                    <button class="btn btn-outline-info btnUpdate" data-id="${dataid}">Editar</button>
                                     <button class="btn btn-outline-warning btnDelete" data-id="${dataid}">Eliminar</button>
                                 </td>
                             `
