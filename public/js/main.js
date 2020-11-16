@@ -2,6 +2,22 @@ var agregarform = $("#agregar");
 var btnEnviar = $("#btncrear");
 agregarform.bind("submit", createtrigger);
 
+//Manejo de ShareErrorsFromSession
+const showErrors = (error) => {
+    let r = []
+    if (error.codigo) r.push(error.codigo)
+    if (error.razon_social) r.push(error.razon_social)
+    if (error.nombre) r.push(error.nombre)
+    if (error.pais) r.push(error.pais)
+    if (error.tipo_moneda) r.push(error.tipo_moneda)
+    if (error.estado) r.push(error.estado)
+    if (error.ciudad) r.push(error.ciudad)
+    if (error.telefono) r.push(error.telefono)
+    if (error.email) r.push(error.email)
+
+    return r.join(', ')
+}
+
 //Agregar nuevo usuario
 var btnNewUser = document.querySelector('#addUser')
 btnNewUser.addEventListener('click', () => {
@@ -28,7 +44,10 @@ function createtrigger(e) {
         },
         success: function (data) {
 
-            let html = `
+            if (data.currency)  alert("La moneda que ingreso no es correcta")
+            else if(data.error_codigo ) alert("El codigo del empresario ya existe")
+            else{
+                let html = `
                             <td class="border px-4 py-2">${data.id}) ${$("#nombre").val()}</td>
                             <td class="border px-4 py-2">${$("#email").val()}</td>
                             <td class="border px-4 py-2">
@@ -37,18 +56,24 @@ function createtrigger(e) {
                                 <button class="btn btn-outline-warning btnDelete" data-id="${data.id}">Eliminar</button>
                             </td>
                         `
-            let el = document.createElement('tr');
-            el.id = '__'+data.id
-            el.innerHTML = html;
-            $('#mostrar tbody').prepend(el);
+                let el = document.createElement('tr');
+                el.id = '__' + data.id
+                el.innerHTML = html;
+                $('#mostrar tbody').prepend(el);
 
-            $('#__' + data.id + ' .btnUpdate').bind('click', updatePrepare)
-            $('#__' + data.id + ' .btn-show').bind('click', showtrigger)
-            $('#__' + data.id + ' .btnDelete').bind('click', deleteTrigger)
-            agregarform.fadeOut()
+                $('#__' + data.id + ' .btnUpdate').bind('click', updatePrepare)
+                $('#__' + data.id + ' .btn-show').bind('click', showtrigger)
+                $('#__' + data.id + ' .btnDelete').bind('click', deleteTrigger)
+                agregarform.fadeOut()
+            }
+
+
         },
-        error: function (data) {
-            alert("Problemas al tratar de enviar el formulario");
+        error: function (error) {
+            console.log(error)
+            if (error.status == 422) {
+                alert("Error al enviar formulario: " + showErrors(error.responseJSON.errors))
+            } else alert("Problemas al tratar de enviar el formulario");
         }
     });
     return false;
@@ -179,8 +204,10 @@ function updateTrigger(e) {
             $('#__' + dataid + ' .btnDelete').bind('click', deleteTrigger)
             updateForm.fadeOut()
         },
-        error: function (data) {
-            alert("Problemas al tratar de enviar el formulario");
+        error: function (error) {
+            if (error.status == 422) {
+                alert("Error al enviar formulario: " + showErrors(error.responseJSON.errors))
+            } else alert("Problemas al tratar de enviar el formulario");
         }
     });
     return false;
@@ -188,14 +215,27 @@ function updateTrigger(e) {
 
 
 //Validacion de las monedas
-var currency = document.querySelector('#btnCurrency')
-currency.addEventListener('click',() => {
+var currency = $('#btnCurrency')
+currency.bind('click', () => {
     let currenciesVal = $('#tipo_moneda')
 
-    if (currencies.includes(currenciesVal.val().toUpperCase())){
+    if (currencies.includes(currenciesVal.val().toUpperCase())) {
         currenciesVal.removeClass('is-invalid')
         currenciesVal.addClass('is-valid')
-    }else{
+    } else {
+        currenciesVal.removeClass('is-valid')
+        currenciesVal.addClass('is-invalid')
+    }
+})
+
+var U_currency = $('#u_btnCurrency')
+U_currency.bind('click', () => {
+    let currenciesVal = $('#u_tipo_moneda')
+
+    if (currencies.includes(currenciesVal.val().toUpperCase())) {
+        currenciesVal.removeClass('is-invalid')
+        currenciesVal.addClass('is-valid')
+    } else {
         currenciesVal.removeClass('is-valid')
         currenciesVal.addClass('is-invalid')
     }

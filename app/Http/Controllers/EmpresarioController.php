@@ -41,37 +41,57 @@ class EmpresarioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request){
-        // $request->validate([
-        //     'codigo_empleado' => 'required | unique| regex:/[a-zA-Z áéíóúÁÉÍÓÚñÑ]/',
-        //     'nombre' => 'required',
-        //     'razon_social' => 'required',
-        //     'apellido_paterno' => 'required',
-        //     'apellidomaterno' => 'required',
-        //     'puesto' => 'required',
-        //     'sueldo' => 'required',
-        //     'tipo_moneda_sueldo' => 'required',
-        //     'correo' => 'required',
-        //     'activo' => 'required',
-        //     'eliminado' => 'required',
-        // ]);
-        //
-        $empleado = new Empresario();
-        $empleado->codigo = $request->codigo;
-        $empleado->razon_social =  $request->razon_social;
-        $empleado->nombre = $request->nombre;
-        $empleado->pais = $request->pais;
-        $empleado->tipo_moneda = $request->tipo_moneda;
-        $empleado->estado = $request->estado;
-        $empleado->ciudad = $request->ciudad;
-        $empleado->telefono = $request->telefono;
-        $empleado->email = $request->email;
-        $empleado->activo = 1;
-        $result = $empleado->save();
+        $response = Http::get(
+            'https://fx.currencysystem.com/webservices/CurrencyServer5.asmx/AllCurrencies',
+            [
+                'licenseKey' => '',
+            ]
+        );
+        $s = xml_parser_create();
+        xml_parse_into_struct($s, $response->body(), $vals, $index);
+        xml_parser_free($s);
+
+        $currencies = explode(';',$vals[0]['value']);
+
+
+        $this->validate($request,[
+            'codigo' => 'required',
+            'razon_social' => 'required',
+            'nombre' => 'required',
+            'pais' => 'required',
+            'tipo_moneda' => 'required',
+            'estado' => 'required',
+            'ciudad' => 'required',
+            'telefono' => 'required',
+            'email' => 'required',
+        ]);
+
         $data = [
-            'state' => $result,
+            'state' => false,
             'id' => 0,
         ];
-        if($result) $data['id'] = $empleado->id;
+
+
+        $codePetition = Empresario::find($request->codigo_empleado);
+        if( $codePetition )
+            $data['error_codigo'] = 1;
+        else if( !in_array ($request->tipo_moneda, $currencies) )
+            $data['currency'] = 1;
+        else {
+            $empleado = new Empresario();
+            $empleado->codigo = $request->codigo;
+            $empleado->razon_social =  $request->razon_social;
+            $empleado->nombre = $request->nombre;
+            $empleado->pais = $request->pais;
+            $empleado->estado = $request->estado;
+            $empleado->ciudad = $request->ciudad;
+            $empleado->telefono = $request->telefono;
+            $empleado->email = $request->email;
+            $empleado->tipo_moneda= $request->tipo_moneda;
+            $empleado->activo = 1;
+            $data['state'] = $empleado->save();
+    }
+        if($data['state']) $data['id'] = $empleado->id;
         return $data;
     }
 
@@ -109,6 +129,18 @@ class EmpresarioController extends Controller
      */
     public function edit(Request $request, Empresario $empresarios)
     {
+        $this->validate($request,[
+            'codigo' => 'required',
+            'razon_social' => 'required',
+            'nombre' => 'required',
+            'pais' => 'required',
+            'tipo_moneda' => 'required',
+            'estado' => 'required',
+            'ciudad' => 'required',
+            'telefono' => 'required',
+            'email' => 'required',
+        ]);
+
         $empresarios = Empresario::find($request->id);
         $empresarios->codigo = $request->codigo;
         $empresarios->razon_social = $request->razon_social;
@@ -156,4 +188,5 @@ class EmpresarioController extends Controller
             'activo' => $empleado->activo
         ];
     }
+
 }

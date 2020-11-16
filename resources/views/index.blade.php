@@ -149,7 +149,7 @@
                         Tipo de moneda
                     </label>
                     <input class="form-control" id="u_tipo_moneda" type="text" placeholder="MXN" name="tipo_moneda">
-                    <button type="button" class="btn btn-dark" id="btnCurrency">Validar Moneda</button>
+                    <button type="button" class="btn btn-dark" id="u_btnCurrency">Validar Moneda</button>
                 </div>
                 <div class="form-group">
                     <label class="" for="u_estado">
