@@ -1,8 +1,12 @@
 var agregarform = $("#agregar");
 var btnEnviar = $("#btncrear");
-$(document).ready(function () {
-    agregarform.bind("submit", createtrigger);
-});
+agregarform.bind("submit", createtrigger);
+
+// $(document).ready(function () {
+
+// });
+
+
 
 function createtrigger(e) {
     e.preventDefault();
@@ -49,7 +53,6 @@ function createtrigger(e) {
 }
 
 //Funcion para aparcer el contenido
-
 
 $('.btnUpdate').bind('click', updatePrepare)
 $('.btn-show').bind('click', showtrigger)
@@ -155,4 +158,11 @@ function updateTrigger(e) {
     return false;
 }
 
+
+
+var currency = document.querySelector('#btnCurrency')
+currency.addEventListener('click',() => {
+    let currencies = $('#tipo_moneda').val()
+
+})
 

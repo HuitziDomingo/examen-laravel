@@ -25,11 +25,12 @@ class EmpresarioController extends Controller
         );
 
 
-        $p = xml_parser_create();
-        xml_parse_into_struct($p, $response->body(), $vals, $index);
-        xml_parser_free($p);
+        $s = xml_parser_create();
+        xml_parse_into_struct($s, $response->body(), $vals, $index);
+        xml_parser_free($s);
 
         $currencies = explode(';',$vals[0]['value']);
+        $currencies = strval(json_encode($currencies));
 
         return view('index', ['empresarios' => $empresarios, 'currencies' => $currencies]);
     }

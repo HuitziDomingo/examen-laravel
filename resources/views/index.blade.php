@@ -83,7 +83,7 @@
                                 Tipo de moneda
                             </label>
                             <input class="form-control" id="tipo_moneda" type="text" placeholder="MXN" name="tipo_moneda">
-                            <button type="submit" class="btn btn-dark" id="btncrear">Validar Moneda</button>
+                            <button type="submit" class="btn btn-dark" id="btnCurrency">Validar Moneda</button>
                         </div>
                         <div class="form-group">
                             <label class="" for="estado">
@@ -111,6 +111,9 @@
                         </div>
                         <button type="submit" class="btn btn-primary" id="btncrear">Enviar</button>
                     </form>
+                    <script>
+                        const currencies= {!!$currencies!!}
+                    </script>
                 </div>
             </div>
         </div>
