@@ -21,16 +21,16 @@ function createtrigger(e) {
         success: function (data) {
 
             let html = `<tr>
-                                <td class="border px-4 py-2">${data.id}) ${$("#nombre").val()}</td>
-                                <td class="border px-4 py-2">${$("#email").val()}</td>
-                                <td class="border px-4 py-2">
+                            <td class="border px-4 py-2">${data.id}) ${$("#nombre").val()}</td>
+                            <td class="border px-4 py-2">${$("#email").val()}</td>
+                            <td class="border px-4 py-2">
                                 <button class="btn-show" data-id="${data.id}">Ver</button> -
                                 <button class="btnUpdate" data-id="${data.id}">Editar</button> -
-                                    <button class="btnToogle" data-id="${data.id}">Inactivar</button> -
-                                    <button class="btnDelete" data-id="${data.id}">Eliminar</button>
-                                </td>
-                                </tr>
-                            `
+
+                                <button class="btnDelete" data-id="${data.id}">Eliminar</button>
+                            </td>
+                        </tr>`
+
             let el = document.createElement('tr');
             el.innerHTML = html;
             $('#mostrar tbody').prepend(el);
@@ -38,7 +38,7 @@ function createtrigger(e) {
             $('#__' + data.id + ' .btnUpdate').bind('click', updatePrepare)
             $('#__' + data.id + ' .btn-show').bind('click', showtrigger)
             $('#__' + data.id + ' .btnDelete').bind('click', deleteTrigger)
-            $('#__' + data.id + ' .btnToogle').bind('click', toogleTrigger)
+
 
         },
         error: function (data) {
@@ -50,7 +50,7 @@ function createtrigger(e) {
 
 //Funcion para aparcer el contenido
 
-$('.btnToogle').bind('click', toogleTrigger)
+
 $('.btnUpdate').bind('click', updatePrepare)
 $('.btn-show').bind('click', showtrigger)
 $('.btnDelete').bind('click', deleteTrigger)
@@ -59,14 +59,13 @@ $('.btnDelete').bind('click', deleteTrigger)
 function showtrigger(e) {
     e.preventDefault()
     getById($(this).attr('data-id'), (data) => {
-        let table = `
-                        <div><h4>Nombre</h4>${data.nombre}</div>
-                        <div><h4>Pais</h4>${data.pais}</div>
-                        <div><h4>Moneda</h4>${data.tipo_moneda}</div>
-                        <div><h4>Estado</h4>${data.estado} </div>
-                        <div><h4>Ciudad</h4>${data.ciudad}</div>
-                        <div><h4>Coreeo</h4>${data.email}</div>
-                        `
+        let table =
+            `<div><h4>Nombre</h4>${data.nombre}</div>
+            <div><h4>Pais</h4>${data.pais}</div>
+            <div><h4>Moneda</h4>${data.tipo_moneda}</div>
+            <div><h4>Estado</h4>${data.estado} </div>
+            <div><h4>Ciudad</h4>${data.ciudad}</div>
+            <div><h4>Coreeo</h4>${data.email}</div>`
         $('#showdiv').html(table)
     })
 }
@@ -139,7 +138,7 @@ function updateTrigger(e) {
                                 <td class="border px-4 py-2">
                                     <button class="btn-show" data-id="${dataid}">Ver</button> -
                                     <button class="btnUpdate" data-id="${dataid}">Editar</button> -
-                                    <button class="btnToogle" data-id="${dataid}">Inactivar</button> -
+
                                     <button class="btnDelete" data-id="${dataid}">Eliminar</button>
                                 </td>
                             `
@@ -147,7 +146,7 @@ function updateTrigger(e) {
             $('#__' + dataid + ' .btnUpdate').bind('click', updatePrepare)
             $('#__' + dataid + ' .btn-show').bind('click', showtrigger)
             $('#__' + dataid + ' .btnDelete').bind('click', deleteTrigger)
-            $('#__' + dataid + ' .btnToogle').bind('click', toogleTrigger)
+
         },
         error: function (data) {
             alert("Problemas al tratar de enviar el formulario");
@@ -156,14 +155,4 @@ function updateTrigger(e) {
     return false;
 }
 
-//Toogle
-function toogleTrigger() {
-    toogleById($(this).attr('data-id'), (data) => {
-        console.log($('#__' + data.id + ' .btnToogle').html())
-        if (data.activo == 1) $('#__' + data.id + ' .btnToogle').html('inactivar')
-        else if (data.activo == 0) $('#__' + data.id + ' .btnToogle').html('activar')
-    })
-}
-function toogleById(id, call) {
-    $.ajax({ type: 'get', url: 'tooglestate/' + id, success: call })
-}
+

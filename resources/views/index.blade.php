@@ -8,8 +8,9 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div id='showdiv' class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+    {{-- Insercion de los elementos para la vista --}}
+    <div class="container">
+        <div id='showdiv' class="">
 
         </div>
     </div>
@@ -19,7 +20,7 @@
             <div class="col-sm-6">
                 <div class="">
                     <div class="">
-                        <h1>Bienvenido a la página principal</h1>
+                        <h1>Listado de empresarios</h1>
                         <table id='mostrar' class="table-fixed">
                         <thead>
                             <tr>
@@ -38,11 +39,6 @@
                                 <td class="border px-4 py-2">
                                     <button class="btn-show" data-id='{{$emp->id}}' >Ver</button> -
                                     <button class="btnUpdate" data-id='{{$emp->id}}'>Editar</button> -
-                                    @if ($emp->activo == 1)
-                                        <button  class="btnToogle" data-id='{{$emp->id}}'>Inactivar</button> -
-                                    @else
-                                        <button  class="btnToogle" data-id='{{$emp->id}}'>Activar</button> -
-                                    @endif
                                     <button class="btnDelete" data-id='{{$emp->id}}'>Eliminar</button>
                                 </td>
                                 </tr>
@@ -87,6 +83,7 @@
                                 Tipo de moneda
                             </label>
                             <input class="form-control" id="tipo_moneda" type="text" placeholder="MXN" name="tipo_moneda">
+                            <button type="submit" class="btn btn-dark" id="btncrear">Validar Moneda</button>
                         </div>
                         <div class="form-group">
                             <label class="" for="estado">

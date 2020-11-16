@@ -17,20 +17,21 @@ class EmpresarioController extends Controller
     public function index()
     {
         $empresarios = Empresario::where('activo', 1)->latest()->paginate(50);
-        // $response = Http::get(
-        //     'https://fx.currencysystem.com/webservices/CurrencyServer5.asmx/AllCurrencies',
-        //     [
-        //         'licenseKey' => ''
-        //     ]
-        // );
+        $response = Http::get(
+            'https://fx.currencysystem.com/webservices/CurrencyServer5.asmx/AllCurrencies',
+            [
+                'licenseKey' => '',
+            ]
+        );
 
-        // $p = xml_parser_create();
-        // xml_parse_into_struct($p, $response->body(), $vals, $index);
-        // xml_parser_free($p);
 
-        // $currency = explode(';',$vals[0]['value']);
+        $p = xml_parser_create();
+        xml_parse_into_struct($p, $response->body(), $vals, $index);
+        xml_parser_free($p);
 
-        return view('index', ['empresarios' => $empresarios,]);
+        $currencies = explode(';',$vals[0]['value']);
+
+        return view('index', ['empresarios' => $empresarios, 'currencies' => $currencies]);
     }
 
     /**
@@ -118,7 +119,6 @@ class EmpresarioController extends Controller
         $empresarios->ciudad = $request->ciudad;
         $empresarios->telefono = $request->telefono;
         $empresarios->email = $request->email;
-        $empresarios->activo = $request->activo;
         $result = $empresarios->save();
 
         return ['result' => $result];
@@ -133,7 +133,7 @@ class EmpresarioController extends Controller
     public function delete(request $request)
     {
         $empleado = Empresario::find($request->id);
-        $empleado->eliminado = 1;
+        $empleado->activo = 0;
 
         return ['result' => $empleado->save()];
     }
