@@ -16,15 +16,14 @@ class EmpresarioController extends Controller
      */
     public function dashboard()
     {
-        $empresarios = Empresario::where('activo', 1)->latest()->paginate(50);
+        $empresarios = Empresario::where('activo', 1)->latest()->paginate(5);
+        //Logica para la api de monedas
         $response = Http::get(
             'https://fx.currencysystem.com/webservices/CurrencyServer5.asmx/AllCurrencies',
             [
                 'licenseKey' => '',
             ]
         );
-
-
         $s = xml_parser_create();
         xml_parse_into_struct($s, $response->body(), $vals, $index);
         xml_parser_free($s);

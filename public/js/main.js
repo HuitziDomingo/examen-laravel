@@ -167,14 +167,12 @@ function updateTrigger(e) {
                                 <td class="border px-4 py-2">
                                     ${dataid})
                                     ${$("#nombre").val()}
-
                                 </td>
                                 <td class="border px-4 py-2">${$("#email").val()}</td>
                                 <td class="border px-4 py-2">
-                                    <button class="btn-show" data-id="${dataid}">Ver</button> -
-                                    <button class="btnUpdate" data-id="${dataid}">Editar</button> -
-
-                                    <button class="btnDelete" data-id="${dataid}">Eliminar</button>
+                                    <button class="btn btn-outline-secondary btn-show" data-id="${dataid}">Ver</button> -
+                                    <button class="btn btn-outline-info btnUpdate" data-id="${dataid}">Editar</button> -
+                                    <button class="btn btn-outline-warning btnDelete" data-id="${dataid}">Eliminar</button>
                                 </td>
                             `
             $('#__' + dataid).html(html)
